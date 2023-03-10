@@ -43,7 +43,7 @@
         </div>
       </div>
 
-      <div class="col-md-3">
+      <!-- <div class="col-md-3">
         <label for="importe_recibo"><b>Importe recibo:</b></label>
         <input
           class="form-control"
@@ -62,6 +62,31 @@
             }}</span>
           </div>
         </div>
+      </div> -->
+      <div class="col-md-3">
+        <input-group>
+          <label for="importe_recibo"><b>Importe recibo:</b></label>
+          <div class="input-group">
+            <input
+              class="form-control"
+              type="number"
+              id="importe_recibo"
+              v-model="poliza.importe_recibo"
+            />
+            <span class="input-group-text">€</span>
+          </div>
+          <div class="col-md-12">
+            <div
+              class="alert alert-danger"
+              role="alert"
+              v-if="errores_de_validacion['validacion_importe_recibo'] != ''"
+            >
+              <span>{{
+                errores_de_validacion["validacion_importe_recibo"]
+              }}</span>
+            </div>
+          </div>
+        </input-group>
       </div>
 
       <div class="col-md-3">
@@ -121,9 +146,14 @@
         </div>
       </div>
 
-      <button class="btn btn-primary" @click.prevent="actualizarPoliza">
-        Enviar
-      </button>
+      <div class="btn-group">
+        <button class="btn btn-warning" @click="$router.back()">
+          <i class="bi bi-x-circle"></i> Cancelar
+        </button>
+        <button class="btn btn-primary" @click.prevent="actualizarPoliza">
+          <i class="bi bi-sd-card"></i> Guardar
+        </button>
+      </div>
     </form>
   </div>
 </template>
@@ -171,9 +201,7 @@ export default {
     },
     //consultamos los cliente
     async consultar_clientes() {
-      const respuesta = await fetch(
-        "PHP/agencia.php/?consultar_clientes"
-      );
+      const respuesta = await fetch("PHP/agencia.php/?consultar_clientes");
       const datosRespuesta = await respuesta.json();
       this.clientes = datosRespuesta;
       console.log(this.clientes);
@@ -250,8 +278,7 @@ export default {
         };
         console.log(polizaActualizada);
         await fetch(
-          "PHP/agencia.php/?actualizar_poliza=" +
-            this.$route.params.id,
+          "PHP/agencia.php/?actualizar_poliza=" + this.$route.params.id,
           {
             method: "POST",
             body: JSON.stringify(polizaActualizada),

@@ -3,7 +3,10 @@
     <div class="card mx-auto" style="width: 25rem">
       <div class="card-body bg-info">
         <form @submit.prevent="login">
-          <label class="text-center h4 mt-3 mb-4">Iniciar sesión</label>
+          <h3>Login AXA Seguros</h3>
+          <div class="text-center">
+            <img src="img/logo.png" height="100px" width="100px" />
+          </div>
           <div class="form-group mt-3 mb-4">
             <input
               type="email"
@@ -57,6 +60,7 @@ export default {
       const usuarios = await response.json();
       if (usuarios.length > 0 && usuarios[0].pass === this.password) {
         localStorage.setItem("estoyLogueado", true);
+        localStorage.setItem("emailUsuario", this.email);
         this.$router.push({ name: "ListarCliente" });
       } else {
         this.errorEmail = true;

@@ -1,34 +1,34 @@
 <template>
   <div id="contenido">
-    <h3>Detalles del cliente {{ cliente.id }}</h3>
+    <h3>
+      Detalles del cliente, {{ cliente.nombre }}&nbsp;{{ cliente.apellidos }}
+    </h3>
     <table id="tabla-clientes" class="table table-striped table-bordered">
       <thead class="thead-dark">
-        <tr>
-          <th>ID</th>
+        <tr style="background-color: #d8f8e1">
           <th>Nombre</th>
           <th>Apellidos</th>
           <th>Teléfono</th>
+          <th>Provincia</th>
           <th>Localidad</th>
           <th>Código Postal</th>
-          <th>Provincia</th>
           <th>Entidad</th>
           <th>Opciones</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>{{ cliente.id }}</td>
           <td>{{ cliente.nombre }}</td>
           <td>{{ cliente.apellidos }}</td>
           <td>{{ cliente.telefono }}</td>
+          <td>{{ cliente.provincia_nombre }}</td>
           <td>{{ cliente.localidad }}</td>
           <td>{{ cliente.cp }}</td>
-          <td>{{ cliente.provincia_nombre }}</td>
           <td>
             <span v-if="this.cliente_Almacenado.entidad === 'empresa'"
-              >Empresa</span
+              ><i class="bi bi-building"></i> Empresa</span
             >
-            <span v-else>Particular</span>
+            <span v-else><i class="bi bi-person-fill"></i> Particular</span>
           </td>
           <td>
             <button class="btn btn-warning" @click="editarCliente(cliente.id)">
@@ -47,11 +47,16 @@
       </tbody>
     </table>
     <hr />
-    <h2>Listado de polizas</h2>
+    <h3>Listado de polizas</h3>
+    <button
+      class="btn btn-success my-3"
+      @click="nuevaPolizaCliente(cliente.id)"
+    >
+      <i class="bi bi-journal-plus"></i> Nueva poliza
+    </button>
     <table id="tabla-polizas" class="table table-striped table-bordered">
       <thead class="thead-dark">
-        <tr>
-          <th>ID</th>
+        <tr style="background-color: #cce5ff">
           <th>Numero Poliza</th>
           <th>Importe de recibo</th>
           <th>Fecha</th>
@@ -64,17 +69,23 @@
         <tr
           v-for="poliza in polizas"
           :key="poliza.id"
-          :class="{
-            'bg-warning': poliza.estado === 'liquidada',
-            'bg-danger': poliza.estado === 'anulada',
-            'bg-info': poliza.estado === 'a_cuenta',
-            'bg-success': poliza.estado === 'cobrada',
-            'bg-primary': poliza.estado === 'pre-anulada',
+          :style="{
+            backgroundColor:
+              poliza.estado === 'liquidada'
+                ? '#ffe4e1'
+                : poliza.estado === 'anulada'
+                ? '#ff6961'
+                : poliza.estado === 'a_cuenta'
+                ? '#84b6f4'
+                : poliza.estado === 'cobrada'
+                ? '#77dd77'
+                : poliza.estado === 'pre-anulada'
+                ? '#ffca99'
+                : '',
           }"
         >
-          <td>{{ poliza.id }}</td>
           <td>{{ poliza.numero_poliza }}</td>
-          <td>{{ poliza.importe_recibo }}</td>
+          <td>{{ poliza.importe_recibo }} €</td>
           <td>{{ poliza.fecha | date("DD-MM-YYYY") }}</td>
           <td>
             <span v-if="poliza.estado === 'liquidada'">Liquidada</span>
@@ -98,7 +109,7 @@
               data-bs-toggle="modal"
               data-bs-target="#staticBackdrop"
               @click="almacenarPoliza(poliza)"
-              v-if="poliza.estado"
+              v-if="poliza.estado && poliza.estado !== 'anulada'"
             >
               <i class="bi bi-trash-fill"></i>
             </button>
@@ -119,8 +130,8 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="staticBackdropLabel">
-              <i class="bi bi-trash-fill"></i> Confirmación de anulacion de
-              poliza
+              <i class="bi bi-trash-fill"></i> Confirmación de anulacion de la
+              poliza <b>{{ this.poliza_Almacenado.numero_poliza }}</b>
             </h5>
             <button
               type="button"
@@ -130,10 +141,13 @@
             ></button>
           </div>
           <div class="modal-body">
-            ¿Esta seguro de querer anular la poliza
-            <b>{{ this.poliza_Almacenado.id }}</b>
+            ¿Esta seguro de querer anular esta poliza?
             <p></p>
-            <p><b>Cliente ID:</b> {{ this.poliza_Almacenado.id_cliente }}</p>
+            <p>
+              <b>Cliente: </b> {{ this.cliente.nombre }}&nbsp;{{
+                this.cliente.apellidos
+              }}
+            </p>
             <p>
               <b>Numero poliza:</b> {{ this.poliza_Almacenado.numero_poliza }}
             </p>
@@ -200,7 +214,9 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="staticBackdropLabel">
-              <i class="bi bi-trash-fill"></i> Confirmación de baja de cliente
+              <i class="bi bi-trash-fill"></i> Confirmación de baja de
+              <b>{{ this.cliente_Almacenado.nombre }}</b
+              >&nbsp;<b>{{ this.cliente_Almacenado.apellidos }}</b>
             </h5>
             <button
               type="button"
@@ -210,20 +226,22 @@
             ></button>
           </div>
           <div class="modal-body">
-            ¿Esta seguro de querer dar de baja al cliente
-            <b>{{ this.cliente_Almacenado.id }}</b> ?
+            ¿Esta seguro de querer dar de baja a este cliente?
+            <p></p>
             <p><b>Nombre:</b> {{ this.cliente_Almacenado.nombre }}</p>
             <p><b>Apellidos:</b> {{ this.cliente_Almacenado.apellidos }}</p>
             <p><b>Teléfono:</b> {{ this.cliente_Almacenado.telefono }}</p>
             <p><b>Localidad:</b> {{ this.cliente_Almacenado.localidad }}</p>
             <p><b>Código Postal:</b> {{ this.cliente_Almacenado.cp }}</p>
-            <p><b>Provincia:</b> {{ this.cliente_Almacenado.provincia }}</p>
+            <p>
+              <b>Provincia:</b> {{ this.cliente_Almacenado.provincia_nombre }}
+            </p>
             <p>
               <b>Entidad: </b>
               <span v-if="this.cliente_Almacenado.entidad === 'empresa'"
-                >Empresa</span
+                ><i class="bi bi-building"></i> Empresa</span
               >
-              <span v-else>Particular</span>
+              <span v-else><i class="bi bi-person-fill"></i> Particular</span>
             </p>
           </div>
           <div class="modal-footer">
@@ -245,6 +263,9 @@
         </div>
       </div>
     </div>
+    <button class="btn btn-warning" @click="$router.back()">
+      <i class="bi bi-arrow-left"></i> Volver atras
+    </button>
   </div>
 </template>
 
@@ -319,7 +340,7 @@ export default {
             $("#tabla-polizas").DataTable({
               pageLength: 5,
               lengthMenu: [5, 10, 25, 50, 100],
-              order: [[3, "desc"]],
+              order: [[2, "desc"]],
             });
           });
         })
@@ -341,6 +362,9 @@ export default {
     almacenarCliente(cliente) {
       console.log(cliente);
       this.cliente_Almacenado = cliente;
+    },
+    nuevaPolizaCliente(id) {
+      this.$router.push({ name: "NuevaPolizaCliente", query: { id: id } });
     },
   },
 };

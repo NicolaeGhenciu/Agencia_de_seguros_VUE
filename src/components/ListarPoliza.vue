@@ -1,10 +1,12 @@
 <template>
   <div id="contenido">
     <h3>Lista de polizas</h3>
+    <button class="btn btn-primary my-2" @click="añadirPolizaRuta()">
+      <i class="bi bi-journal-plus"></i> Nuevo Cliente
+    </button>
     <table id="tabla-polizas" class="table table-striped table-bordered">
       <thead class="thead-dark">
         <tr>
-          <th>ID</th>
           <th>Cliente ID</th>
           <th>Numero Poliza</th>
           <th>Importe de recibo</th>
@@ -18,26 +20,32 @@
         <tr
           v-for="poliza in polizas"
           :key="poliza.id"
-          :class="{
-            'bg-warning': poliza.estado === 'liquidada',
-            'bg-danger': poliza.estado === 'anulada',
-            'bg-info': poliza.estado === 'a_cuenta',
-            'bg-success': poliza.estado === 'cobrada',
-            'bg-primary': poliza.estado === 'pre-anulada',
+          :style="{
+            backgroundColor:
+              poliza.estado === 'liquidada'
+                ? '#ffe4e1'
+                : poliza.estado === 'anulada'
+                ? '#ff6961'
+                : poliza.estado === 'a_cuenta'
+                ? '#84b6f4'
+                : poliza.estado === 'cobrada'
+                ? '#77dd77'
+                : poliza.estado === 'pre-anulada'
+                ? '#ffca99'
+                : '',
           }"
         >
-          <td>{{ poliza.id }}</td>
           <td>
             <button
               class="btn btn-light"
               @click="verDetalles(poliza.id_cliente)"
             >
-              {{ poliza.id_cliente }}
+              <i class="bi bi-person-vcard"></i> <b>{{ poliza.id_cliente }}</b>
             </button>
           </td>
           <td>{{ poliza.numero_poliza }}</td>
           <td>{{ poliza.importe_recibo }} €</td>
-          <td>{{ poliza.fecha | date("DD-MM-YYYY") }}</td>
+          <td>{{ poliza.fecha }}</td>
           <td>
             <span v-if="poliza.estado === 'liquidada'">Liquidada</span>
             <span v-if="poliza.estado === 'anulada'">Anulada</span>
@@ -59,6 +67,7 @@
               data-bs-toggle="modal"
               data-bs-target="#staticBackdrop"
               @click="almacenarPoliza(poliza)"
+              v-if="poliza.estado && poliza.estado !== 'anulada'"
             >
               <i class="bi bi-trash-fill"></i>
             </button>
@@ -195,7 +204,7 @@ export default {
             $("#tabla-polizas").DataTable({
               pageLength: 6,
               lengthMenu: [6, 10, 25, 50, 100],
-              order: [[4, "desc"]],
+              order: [[3, "desc"]],
             });
           });
         })
@@ -214,6 +223,9 @@ export default {
     almacenarPoliza(poliza) {
       console.log(poliza);
       this.poliza_Almacenado = poliza;
+    },
+    añadirPolizaRuta() {
+      this.$router.push({ name: "AltaPoliza" });
     },
   },
 };

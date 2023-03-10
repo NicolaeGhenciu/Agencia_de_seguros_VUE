@@ -11,8 +11,10 @@ import LoginUsuario from './components/LoginUsuario.vue'
 import ListarCliente from './components/ListarCliente.vue'
 import ListarPoliza from './components/ListarPoliza.vue'
 import ListarPolizaFiltrado from './components/ListarPolizaFiltrado.vue'
+import ListarFiltrado from './components/ListarFiltrado.vue'
 import AltaCliente from './components/AltaCliente.vue'
 import AltaPoliza from './components/AltaPoliza.vue'
+import NuevaPolizaCliente from './components/NuevaPolizaCliente.vue'
 import EditarCliente from './components/EditarCliente.vue'
 import EditarPoliza from './components/EditarPoliza.vue'
 import DetallesCliente from './components/DetallesCliente.vue'
@@ -47,6 +49,12 @@ const router = new VueRouter({
       meta: { requiresAuth: true }
     },
     {
+      path: '/listarfiltrado',
+      name: 'ListarFiltrado',
+      component: ListarFiltrado,
+      meta: { requiresAuth: true }
+    },
+    {
       path: '/altacliente',
       name: 'AltaCliente',
       component: AltaCliente,
@@ -56,6 +64,12 @@ const router = new VueRouter({
       path: '/altapoliza',
       name: 'AltaPoliza',
       component: AltaPoliza,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/nuevapolizacliente',
+      name: 'NuevaPolizaCliente',
+      component: NuevaPolizaCliente,
       meta: { requiresAuth: true }
     },
     {

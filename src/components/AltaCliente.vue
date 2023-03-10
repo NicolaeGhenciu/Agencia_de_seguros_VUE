@@ -138,7 +138,7 @@
             value="empresa"
             v-model="cliente.entidad"
           />
-          Empresa
+          <i class="bi bi-building"></i> Empresa
         </div>
         <div class="form-check">
           <input
@@ -148,7 +148,7 @@
             value="particular"
             v-model="cliente.entidad"
           />
-          Particular
+          <i class="bi bi-person-fill"></i> Particular
         </div>
         <div class="col-md-12">
           <div
@@ -161,9 +161,15 @@
         </div>
       </div>
 
-      <button class="btn btn-primary" @click.prevent="agregarRegistro">
-        Enviar
-      </button>
+      <div class="btn-group">
+        <button class="btn btn-warning" @click="$router.back()">
+          <i class="bi bi-x-circle"></i> Cancelar
+        </button>
+        <button class="btn btn-primary" @click.prevent="agregarRegistro">
+          <i class="bi bi-sd-card"></i> Guardar
+        </button>
+      </div>
+      
     </form>
   </div>
 </template>

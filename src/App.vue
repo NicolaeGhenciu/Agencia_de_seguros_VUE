@@ -1,30 +1,99 @@
 <template>
   <div id="app">
     <!-- v-if="$route.meta.requiresAuth" -->
-    <nav v-if="$route.meta.requiresAuth">
-      <router-link to="/altacliente"
-        ><i class="bi bi-person-fill-add"></i> Alta Cliente</router-link
-      >
-      |
-      <router-link to="/altapoliza"
-        ><i class="bi bi-journal-plus"></i> Alta Poliza</router-link
-      >
-      |
-      <router-link to="/listarcliente"
-        ><i class="bi bi-people-fill"></i> Listar Cliente</router-link
-      >
-      |
-      <router-link to="/listarpoliza"
-        ><i class="bi bi-folder-fill"></i> Listar Polizas</router-link
-      >
-      |
-      <router-link to="/listarpolizafiltrado"
-        ><i class="bi bi-folder-fill"></i> Listar Polizas Filtrado</router-link
-      >
-      |
-      <button class="badge bg-danger" @click="logout">
-        <i class="bi bi-door-open-fill"></i> Cerrar sesión
-      </button>
+
+    <nav
+      v-if="$route.meta.requiresAuth"
+      class="navbar navbar-expand-lg navbar-light bg-primary"
+    >
+      <div class="container-fluid">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item dropdown">
+              &nbsp;&nbsp;&nbsp;&nbsp;<img
+                src="img/logo.png"
+                height="40px"
+                width="40px"
+              />
+            </li>
+            <li class="nav-item dropdown">&nbsp;&nbsp;</li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                style="color: black"
+              >
+                <b><i class="bi bi-card-checklist"></i> Listar</b>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li>
+                  <router-link class="dropdown-item" to="/listarcliente"
+                    ><i class="bi bi-people-fill"></i> Listar
+                    Cliente</router-link
+                  >
+                </li>
+                <li>
+                  <router-link class="dropdown-item" to="/listarpoliza"
+                    ><i class="bi bi-folder-fill"></i> Listar
+                    Polizas</router-link
+                  >
+                </li>
+                <li>
+                  <router-link class="dropdown-item" to="/listarfiltrado"
+                    ><i class="bi bi-search"></i> Listar Clientes/Polizas
+                    filtrando</router-link
+                  >
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown2"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                style="color: black"
+              >
+                <b><i class="bi bi-file-plus"></i> Insertar</b>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown2">
+                <li>
+                  <router-link class="dropdown-item" to="/altacliente"
+                    ><i class="bi bi-person-fill-add"></i> Alta
+                    Cliente</router-link
+                  >
+                </li>
+                <li>
+                  <router-link class="dropdown-item" to="/altapoliza"
+                    ><i class="bi bi-journal-plus"></i> Alta Poliza</router-link
+                  >
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        &nbsp;
+        <button class="btn btn-danger" @click="logout">
+          <i class="bi bi-door-open-fill"></i> Cerrar sesión
+        </button>
+      </div>
     </nav>
     <router-view />
     <footer
@@ -53,7 +122,9 @@
         <li class="ms-3">
           <a class="text-muted" href="#"><i class="bi bi-whatsapp"></i></a>
         </li>
-        <li class="ms-3"><a class="text-muted" href="#"></a></li>
+        <li class="ms-3">
+          <a class="text-muted" href="#"></a>
+        </li>
         <li class="ms-3"><a class="text-muted" href="#"></a></li>
       </ul>
     </footer>
@@ -62,9 +133,15 @@
 
 <script>
 export default {
+  data() {
+    return {
+      emailUsuario: localStorage.getItem("emailUsuario"),
+    };
+  },
   methods: {
     logout() {
       localStorage.removeItem("estoyLogueado");
+      localStorage.removeItem("emailUsuario");
       this.$router.push("/");
     },
   },

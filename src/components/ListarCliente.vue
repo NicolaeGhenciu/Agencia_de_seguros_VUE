@@ -1,27 +1,30 @@
 <template>
   <div id="contenido">
     <h3>Lista de clientes</h3>
+    <button class="btn btn-primary my-2" @click="añadirClienteRuta()">
+      <i class="bi bi-person-fill-add"></i> Nuevo Cliente
+    </button>
     <table id="tabla-clientes" class="table table-striped table-bordered">
       <thead class="thead-dark">
-        <tr>
-          <th>ID</th>
+        <tr style="background-color: #d8f8e1">
           <th>Nombre</th>
           <th>Apellidos</th>
           <th>Teléfono</th>
-          <th>Localidad</th>
+          <th>Provincia</th>
           <th>Entidad</th>
           <th>Opciones</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="cliente in clientes" :key="cliente.id">
-          <td>{{ cliente.id }}</td>
           <td>{{ cliente.nombre }}</td>
           <td>{{ cliente.apellidos }}</td>
           <td>{{ cliente.telefono }}</td>
-          <td>{{ cliente.localidad }}</td>
-          <td v-if="cliente.entidad === 'empresa'">Empresa</td>
-          <td v-else>Particular</td>
+          <td>{{ cliente.provincia_nombre }}</td>
+          <td v-if="cliente.entidad === 'empresa'">
+            <i class="bi bi-building"></i> Empresa
+          </td>
+          <td v-else><i class="bi bi-person-fill"></i> Particular</td>
           <!-- <td>{{ cliente.entidad }}</td> -->
           <td>
             <button class="btn btn-info" @click="verDetalles(cliente.id)">
@@ -29,6 +32,12 @@
             >&nbsp;
             <button class="btn btn-warning" @click="editarCliente(cliente.id)">
               <i class="bi bi-pencil-square"></i></button
+            >&nbsp;
+            <button
+              class="btn btn-success"
+              @click="nuevaPolizaCliente(cliente.id)"
+            >
+              <i class="bi bi-journal-plus"></i></button
             >&nbsp;
             <button
               type="button"
@@ -57,7 +66,9 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="staticBackdropLabel">
-              <i class="bi bi-trash-fill"></i> Confirmación de baja de cliente
+              <i class="bi bi-trash-fill"></i> Confirmación de baja de
+              <b>{{ this.cliente_Almacenado.nombre }}</b
+              >&nbsp;<b>{{ this.cliente_Almacenado.apellidos }}</b>
             </h5>
             <button
               type="button"
@@ -67,20 +78,22 @@
             ></button>
           </div>
           <div class="modal-body">
-            ¿Esta seguro de querer dar de baja al cliente
-            <b>{{ this.cliente_Almacenado.id }}</b> ?
+            ¿Esta seguro de querer dar de baja a este cliente?
+            <p></p>
             <p><b>Nombre:</b> {{ this.cliente_Almacenado.nombre }}</p>
             <p><b>Apellidos:</b> {{ this.cliente_Almacenado.apellidos }}</p>
             <p><b>Teléfono:</b> {{ this.cliente_Almacenado.telefono }}</p>
             <p><b>Localidad:</b> {{ this.cliente_Almacenado.localidad }}</p>
             <p><b>Código Postal:</b> {{ this.cliente_Almacenado.cp }}</p>
-            <p><b>Provincia:</b> {{ this.cliente_Almacenado.provincia }}</p>
+            <p>
+              <b>Provincia:</b> {{ this.cliente_Almacenado.provincia_nombre }}
+            </p>
             <p>
               <b>Entidad: </b>
               <span v-if="this.cliente_Almacenado.entidad === 'empresa'"
-                >Empresa</span
+                ><i class="bi bi-building"></i> Empresa</span
               >
-              <span v-else>Particular</span>
+              <span v-else><i class="bi bi-person-fill"></i> Particular</span>
             </p>
           </div>
           <div class="modal-footer">
@@ -163,6 +176,12 @@ export default {
     almacenarCliente(cliente) {
       console.log(cliente);
       this.cliente_Almacenado = cliente;
+    },
+    añadirClienteRuta() {
+      this.$router.push({ name: "AltaCliente" });
+    },
+    nuevaPolizaCliente(id) {
+      this.$router.push({ name: "NuevaPolizaCliente", query: { id: id } });
     },
   },
 };

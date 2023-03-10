@@ -1,6 +1,8 @@
 <template>
   <div class="card m-5">
-    <div class="card-header"><b>Editar cliente</b></div>
+    <div class="card-header">
+      <b><i class="bi bi-person-gear"></i> Editar cliente</b>
+    </div>
     <form class="row g-3 m-4">
       <div class="col-md-3">
         <label for="nombre"><b>Nombre:</b></label>
@@ -136,7 +138,7 @@
             value="empresa"
             v-model="cliente.entidad"
           />
-          Empresa
+          <i class="bi bi-building"></i> Empresa
         </div>
         <div class="form-check">
           <input
@@ -146,7 +148,7 @@
             value="particular"
             v-model="cliente.entidad"
           />
-          Particular
+          <i class="bi bi-person-fill"></i> Particular
         </div>
         <div class="col-md-12">
           <div
@@ -159,9 +161,17 @@
         </div>
       </div>
 
-      <button class="btn btn-primary" @click.prevent="actualizarCliente">
-        Enviar
-      </button>
+      <div class="btn-group">
+        <button class="btn btn-warning" @click="$router.back()">
+          <i class="bi bi-x-circle"></i> Cancelar
+        </button>
+        <!-- <router-link to="/listarcliente" class="btn btn-warning">
+          <i class="bi bi-x-circle"></i> Cancelar
+        </router-link> -->
+        <button class="btn btn-primary" @click.prevent="actualizarCliente">
+          <i class="bi bi-sd-card"></i> Guardar
+        </button>
+      </div>
     </form>
   </div>
 </template>
@@ -213,14 +223,13 @@ export default {
         });
     },
     async actualizarCliente() {
-
       const provincia = this.provincias.find(
         (p) => p.id === this.cliente.provincia
       );
 
       // Cambiamos el valor de cliente.provincia de id a nombre
       this.cliente.provincia_nombre = provincia.provincia;
-      
+
       this.validacion();
       if (this.hay_error == false) {
         const clienteActualizado = {
@@ -245,7 +254,10 @@ export default {
           .then((respuesta) => respuesta.json())
           .then((datosRespuesta) => {
             console.log(datosRespuesta);
-            this.$router.push({ name: "ListarCliente" });
+            this.$router.push({
+              name: "DetallesCliente",
+              query: { id: this.cliente.id },
+            });
           });
       }
     },

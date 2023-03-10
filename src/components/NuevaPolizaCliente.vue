@@ -1,30 +1,12 @@
 <template>
   <div class="card m-5">
-    <div class="card-header"><b>Formulario alta poliza</b></div>
+    <div class="card-header">
+      <b
+        ><i class="bi bi-journal-plus"></i> Nueva poliza para
+        {{ this.nombreCliente }}</b
+      >
+    </div>
     <form class="row g-3 m-4">
-      <div class="col-md-3">
-        <label for="id_cliente"><b>Cliente:</b></label>
-        <select class="form-select" id="id_cliente" v-model="poliza.id_cliente">
-          <option disabled selected value="">Seleccione un cliente</option>
-          <option
-            v-for="cliente in clientes"
-            :value="cliente.id"
-            :key="cliente.id"
-          >
-            {{ cliente.nombre + " " + cliente.apellidos }}
-          </option>
-        </select>
-        <div class="col-md-12">
-          <div
-            class="alert alert-danger"
-            role="alert"
-            v-if="errores_de_validacion['validacion_id_cliente'] != ''"
-          >
-            <span>{{ errores_de_validacion["validacion_id_cliente"] }}</span>
-          </div>
-        </div>
-      </div>
-
       <div class="col-md-3">
         <label for="numero_poliza"><b>Numero poliza:</b></label>
         <input
@@ -72,28 +54,6 @@
         </input-group>
       </div>
 
-      <!-- <div class="col-md-3">
-        <label for="importe_recibo"><b>Importe recibo:</b></label>
-        <input
-          class="form-control"
-          placeholder="€"
-          type="number"
-          id="importe_recibo"
-          v-model="poliza.importe_recibo"
-        />
-        <div class="col-md-12">
-          <div
-            class="alert alert-danger"
-            role="alert"
-            v-if="errores_de_validacion['validacion_importe_recibo'] != ''"
-          >
-            <span>{{
-              errores_de_validacion["validacion_importe_recibo"]
-            }}</span>
-          </div>
-        </div>
-      </div> -->
-
       <div class="col-md-3">
         <label for="fecha"><b>Fecha alta:</b></label>
         <input
@@ -134,7 +94,7 @@
         </div>
       </div>
 
-      <div class="col-md-3">
+      <div class="col-md-12">
         <label for="observaciones"><b>Observaciones:</b></label>
         <textarea
           class="form-control"
@@ -154,9 +114,12 @@
       </div>
 
       <div class="btn-group">
-        <button class="btn btn-warning" @click="$router.back()">
+        <button class="btn btn-warning" @click="$router.go(-1)">
           <i class="bi bi-x-circle"></i> Cancelar
         </button>
+        <!-- <router-link to="/listarcliente" class="btn btn-warning">
+          <i class="bi bi-x-circle"></i> Cancelar
+        </router-link> -->
         <button class="btn btn-primary" @click.prevent="agregarRegistro">
           <i class="bi bi-sd-card"></i> Guardar
         </button>
@@ -164,13 +127,13 @@
     </form>
   </div>
 </template>
-  
-  <script>
+    
+    <script>
 export default {
   data() {
     return {
       poliza: {
-        id_cliente: "",
+        id_cliente: this.$route.query.id,
         numero_poliza: "",
         importe_recibo: "",
         fecha: "",
@@ -178,6 +141,7 @@ export default {
         observaciones: "",
       },
       clientes: [],
+      nombreCliente: "",
       hay_error: false,
       errores_de_validacion: {
         validacion_id_cliente: "",
@@ -195,7 +159,12 @@ export default {
       const respuesta = await fetch("PHP/agencia.php/?consultar_clientes");
       const datosRespuesta = await respuesta.json();
       this.clientes = datosRespuesta;
-      console.log(this.clientes);
+      for (let i = 0; i < this.clientes.length; i++) {
+        if (this.clientes[i].id == this.$route.query.id) {
+          this.nombreCliente =
+            this.clientes[i].nombre + " " + this.clientes[i].apellidos;
+        }
+      }
     },
     //aqui hacemos las validaciones pertinentes
     validacion() {
@@ -270,7 +239,7 @@ export default {
         });
         const datosRespuesta = await respuesta.json();
         console.log(datosRespuesta);
-        this.$router.push({ name: "ListarPoliza" });
+        this.$router.go(-1);
       }
     },
   },

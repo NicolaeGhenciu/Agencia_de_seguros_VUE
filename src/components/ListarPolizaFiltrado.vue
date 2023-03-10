@@ -170,7 +170,7 @@ export default {
     return {
       polizas: [],
       poliza_Almacenado: [],
-      estadoSeleccionado: "liquidada",
+      estadoSeleccionado: "",
     };
   },
   filters: {
